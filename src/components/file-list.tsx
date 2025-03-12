@@ -1,5 +1,5 @@
-"use client"
-import Link from "next/link"
+"use client";
+import Link from "next/link";
 import {
   FileIcon,
   FolderIcon,
@@ -9,44 +9,63 @@ import {
   FileArchive,
   FileAudio,
   FileVideo,
-} from "lucide-react"
-import { Button } from "~/components/ui/button"
-import { Card, CardContent, CardFooter } from "~/components/ui/card"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "~/components/ui/dropdown-menu"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table"
-import { formatBytes, formatDate } from "~/lib/utils"
-import type { FileItem, FolderItem } from "~/lib/mock-data"
-
+} from "lucide-react";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardFooter } from "~/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "~/components/ui/table";
+import { formatBytes, formatDate } from "~/lib/utils";
+import { folders, files } from "~/lib/mock-data";
 interface FileListProps {
-  items: (FileItem | FolderItem)[]
-  currentPath: string[]
-  onNavigate: (path: string[]) => void
-  view: "grid" | "list"
+  itemIds: string[];
+  currentPath: string[];
+  onNavigate: (path: string[]) => void;
+  view: "grid" | "list";
 }
 
-export function FileList({ items, currentPath, onNavigate, view }: FileListProps) {
-  // Get appropriate icon based on file type
+export function FileList({
+  itemIds,
+  currentPath,
+  onNavigate,
+  view,
+}: FileListProps) {
+  //we construct the file/folder based on the item id for now we use mock data
+  const items = [...folders, ...files].filter((item) =>
+    itemIds.includes(item.id),
+  );
   const getFileIcon = (fileType: string) => {
     switch (fileType) {
       case "image":
-        return <FileImage className="h-6 w-6 text-blue-500" />
+        return <FileImage className="h-6 w-6 text-blue-500" />;
       case "document":
-        return <FileText className="h-6 w-6 text-green-500" />
+        return <FileText className="h-6 w-6 text-green-500" />;
       case "archive":
-        return <FileArchive className="h-6 w-6 text-yellow-500" />
+        return <FileArchive className="h-6 w-6 text-yellow-500" />;
       case "audio":
-        return <FileAudio className="h-6 w-6 text-purple-500" />
+        return <FileAudio className="h-6 w-6 text-purple-500" />;
       case "video":
-        return <FileVideo className="h-6 w-6 text-red-500" />
+        return <FileVideo className="h-6 w-6 text-red-500" />;
       default:
-        return <FileIcon className="h-6 w-6 text-gray-500" />
+        return <FileIcon className="h-6 w-6 text-gray-500" />;
     }
-  }
+  };
 
   // Handle folder click
   const handleFolderClick = (folderName: string) => {
-    onNavigate([...currentPath, folderName])
-  }
+    onNavigate([...currentPath, folderName]);
+  };
 
   if (view === "grid") {
     return (
@@ -77,19 +96,30 @@ export function FileList({ items, currentPath, onNavigate, view }: FileListProps
             <CardContent className="p-3">
               <div className="truncate font-medium">
                 {item.type === "folder" ? (
-                  <span className="cursor-pointer hover:underline" onClick={() => handleFolderClick(item.name)}>
+                  <span
+                    className="cursor-pointer hover:underline"
+                    onClick={() => handleFolderClick(item.name)}
+                  >
                     {item.name}
                   </span>
                 ) : (
-                  <Link href="#" className="hover:underline">
+                  <a
+                    href={item.type === "file" ? item.url : "#"}
+                    className="hover:underline"
+                    target="_blank"
+                  >
                     {item.name}
-                  </Link>
+                  </a>
                 )}
               </div>
-              <div className="text-xs text-muted-foreground">{item.type === "file" && formatBytes(item.size)}</div>
+              <div className="text-xs text-muted-foreground">
+                {item.type === "file" && formatBytes(item.size)}
+              </div>
             </CardContent>
             <CardFooter className="flex items-center justify-between p-2">
-              <span className="text-xs text-muted-foreground">{formatDate(item.modifiedAt)}</span>
+              <span className="text-xs text-muted-foreground">
+                {formatDate(item.modifiedAt)}
+              </span>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -101,14 +131,16 @@ export function FileList({ items, currentPath, onNavigate, view }: FileListProps
                   <DropdownMenuItem>Download</DropdownMenuItem>
                   <DropdownMenuItem>Share</DropdownMenuItem>
                   <DropdownMenuItem>Rename</DropdownMenuItem>
-                  <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+                  <DropdownMenuItem className="text-destructive">
+                    Delete
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </CardFooter>
           </Card>
         ))}
       </div>
-    )
+    );
   }
 
   return (
@@ -140,7 +172,10 @@ export function FileList({ items, currentPath, onNavigate, view }: FileListProps
                   ) : (
                     <>
                       {getFileIcon(item.fileType)}
-                      <Link href="#" className="font-medium hover:underline">
+                      <Link
+                        href={item.url}
+                        className="font-medium hover:underline"
+                      >
                         {item.name}
                       </Link>
                     </>
@@ -148,7 +183,9 @@ export function FileList({ items, currentPath, onNavigate, view }: FileListProps
                 </div>
               </TableCell>
               <TableCell>{formatDate(item.modifiedAt)}</TableCell>
-              <TableCell>{item.type === "file" ? formatBytes(item.size) : "—"}</TableCell>
+              <TableCell>
+                {item.type === "file" ? formatBytes(item.size) : "—"}
+              </TableCell>
               <TableCell>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -161,7 +198,9 @@ export function FileList({ items, currentPath, onNavigate, view }: FileListProps
                     <DropdownMenuItem>Download</DropdownMenuItem>
                     <DropdownMenuItem>Share</DropdownMenuItem>
                     <DropdownMenuItem>Rename</DropdownMenuItem>
-                    <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+                    <DropdownMenuItem className="text-destructive">
+                      Delete
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>
@@ -170,6 +209,5 @@ export function FileList({ items, currentPath, onNavigate, view }: FileListProps
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }
-

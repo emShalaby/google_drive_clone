@@ -1,102 +1,78 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "~/components/ui/breadcrumb"
-import { Button } from "~/components/ui/button"
-import { Input } from "~/components/ui/input"
-import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs"
-import { FileList } from "~/components/file-list"
-import { UploadButton } from "~/components/upload-button"
-import { mockFileSystem } from "~/lib/mock-data"
-
+import { useState } from "react";
+import { Button } from "~/components/ui/button";
+import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { FileList } from "~/components/file-list";
+import { folders, files } from "~/lib/mock-data";
+import Breadcrumbs from "~/components/breadcrumbs";
+import Header from "~/components/header";
 export default function DrivePage() {
-  const [currentPath, setCurrentPath] = useState<string[]>([])
-  const [currentView, setCurrentView] = useState<"grid" | "list">("grid")
+  const [currentPath, setCurrentPath] = useState<string[]>([]);
+  const [currentView, setCurrentView] = useState<"grid" | "list">("grid");
 
-  // Navigate to a specific folder
   const navigateToFolder = (folderPath: string[]) => {
-    setCurrentPath(folderPath)
-  }
+    setCurrentPath(folderPath);
+  };
 
-  // Navigate up one level
   const navigateUp = () => {
     if (currentPath.length > 0) {
-      setCurrentPath(currentPath.slice(0, -1))
+      setCurrentPath(currentPath.slice(0, -1));
     }
-  }
+  };
 
-  // Get current folder content based on path
   const getCurrentFolder = () => {
-    let current = mockFileSystem
+    let current = folders.find((f) => f.id === "root");
+    if (currentPath.length === 0) return current;
+    current = folders.find(
+      (f) =>
+        f.name === currentPath[currentPath.length - 1] &&
+        f.parent === current?.id,
+    );
+    return current;
+  };
 
-    for (const folder of currentPath) {
-      const foundFolder = current.items.find((item) => item.type === "folder" && item.name === folder)
-
-      if (foundFolder && foundFolder.type === "folder") {
-        current = foundFolder
-      } else {
-        return mockFileSystem // Return root if path is invalid
+  const currentFolder = getCurrentFolder();
+  console.log(JSON.stringify(currentFolder), "current folder");
+  const breadcrumbItems: { path: string[]; name: string }[] = (() => {
+    const items: { path: string[]; name: string }[] = [
+      { name: "My Drive", path: [] },
+    ];
+    if (currentPath.length === 0) {
+      return items;
+    } else {
+      for (let i = 0; i < currentPath.length; i++) {
+        const name = currentPath[i];
+        if (name) {
+          items.push({
+            name,
+            path: currentPath.slice(0, i + 1),
+          });
+        }
       }
+      return items;
     }
-
-    return current
-  }
-
-  const currentFolder = getCurrentFolder()
-
-  // Generate breadcrumb items
-  const breadcrumbItems = [
-    { name: "My Drive", path: [] },
-    ...currentPath.map((folder, index) => ({
-      name: folder,
-      path: currentPath.slice(0, index + 1),
-    })),
-  ]
-
+  })();
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-10 border-b bg-background">
-        <div className="flex h-16 items-center px-4">
-          <h1 className="text-xl font-semibold">Google Drive Clone</h1>
-          <div className="ml-auto flex items-center gap-2">
-            <Input placeholder="Search in Drive" className="w-64 md:w-80" />
-            <UploadButton currentPath={currentPath} />
-          </div>
-        </div>
-      </header>
+      <Header currentPath={currentPath} />
       <main className="flex-1 p-4 md:p-6">
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <Breadcrumb>
-            <BreadcrumbList>
-              {breadcrumbItems.map((item, index) => (
-                <BreadcrumbItem key={index}>
-                  {index < breadcrumbItems.length - 1 ? (
-                    <>
-                      <BreadcrumbLink onClick={() => navigateToFolder(item.path)} className="cursor-pointer">
-                        {item.name}
-                      </BreadcrumbLink>
-                      <BreadcrumbSeparator />
-                    </>
-                  ) : (
-                    <BreadcrumbLink>{item.name}</BreadcrumbLink>
-                  )}
-                </BreadcrumbItem>
-              ))}
-            </BreadcrumbList>
-          </Breadcrumb>
+          <Breadcrumbs
+            breadcrumbItems={breadcrumbItems}
+            onClick={navigateToFolder}
+          />
           <div className="flex items-center gap-2">
             {currentPath.length > 0 && (
               <Button variant="outline" size="sm" onClick={navigateUp}>
                 Back
               </Button>
             )}
-            <Tabs defaultValue="grid" value={currentView} onValueChange={(v) => setCurrentView(v as "grid" | "list")}>
+            <Tabs
+              defaultValue="grid"
+              value={currentView}
+              onValueChange={(v) => setCurrentView(v as "grid" | "list")}
+            >
               <TabsList>
                 <TabsTrigger value="grid">Grid</TabsTrigger>
                 <TabsTrigger value="list">List</TabsTrigger>
@@ -106,13 +82,14 @@ export default function DrivePage() {
         </div>
 
         <FileList
-          items={currentFolder.items}
+          itemIds={[...folders, ...files]
+            .filter((i) => i.parent === currentFolder?.id)
+            .map((i) => i.id)}
           currentPath={currentPath}
           onNavigate={navigateToFolder}
           view={currentView}
         />
       </main>
     </div>
-  )
+  );
 }
-
