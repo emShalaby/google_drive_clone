@@ -27,7 +27,7 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { formatBytes, formatDate } from "~/lib/utils";
-import { folders, files } from "~/lib/mock-data";
+import { mockFolders, mockFiles } from "~/lib/mock-data";
 interface FileListProps {
   itemIds: string[];
   currentPath: string[];
@@ -42,7 +42,7 @@ export function FileList({
   view,
 }: FileListProps) {
   //we construct the file/folder based on the item id for now we use mock data
-  const items = [...folders, ...files].filter((item) =>
+  const items = [...mockFolders, ...mockFiles].filter((item) =>
     itemIds.includes(item.id),
   );
   const getFileIcon = (fileType: string) => {

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { FileList } from "~/components/file-list";
-import { folders, files } from "~/lib/mock-data";
+import { mockFolders, mockFiles } from "~/lib/mock-data";
 import Breadcrumbs from "~/components/breadcrumbs";
 import Header from "~/components/header";
 export default function DrivePage() {
@@ -22,9 +22,9 @@ export default function DrivePage() {
   };
 
   const getCurrentFolder = () => {
-    let current = folders.find((f) => f.id === "root");
+    let current = mockFolders.find((f) => f.id === "0");
     if (currentPath.length === 0) return current;
-    current = folders.find(
+    current = mockFolders.find(
       (f) =>
         f.name === currentPath[currentPath.length - 1] &&
         f.parent === current?.id,
@@ -82,7 +82,7 @@ export default function DrivePage() {
         </div>
 
         <FileList
-          itemIds={[...folders, ...files]
+          itemIds={[...mockFolders, ...mockFiles]
             .filter((i) => i.parent === currentFolder?.id)
             .map((i) => i.id)}
           currentPath={currentPath}

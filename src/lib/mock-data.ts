@@ -21,9 +21,9 @@ export interface FolderItem {
 
 // Generate a mock file system with folders and files
 
-export const folders: FolderItem[] = [
+export const mockFolders: FolderItem[] = [
   {
-    id: "root",
+    id: "0",
     type: "folder",
     name: "My Drive",
     modifiedAt: new Date("2025-03-11T10:00:00Z"),
@@ -36,7 +36,7 @@ export const folders: FolderItem[] = [
     name: "Documents",
     modifiedAt: new Date("2025-03-10T15:30:00Z"),
     createdAt: new Date("2025-01-15T09:00:00Z"),
-    parent: "root",
+    parent: "0",
   },
   {
     id: "2",
@@ -44,7 +44,7 @@ export const folders: FolderItem[] = [
     name: "Photos",
     modifiedAt: new Date("2025-03-09T14:00:00Z"),
     createdAt: new Date("2025-02-01T10:00:00Z"),
-    parent: "root",
+    parent: "0",
   },
   {
     id: "3",
@@ -52,10 +52,10 @@ export const folders: FolderItem[] = [
     name: "Work",
     modifiedAt: new Date("2025-03-11T08:45:00Z"),
     createdAt: new Date("2025-02-15T13:00:00Z"),
-    parent: "root",
+    parent: "0",
   }
 ];
-export const files: FileItem[] = [
+export const mockFiles: FileItem[] = [
   {
     id: "f1",
     type: "file",
@@ -76,7 +76,7 @@ export const files: FileItem[] = [
     modifiedAt: new Date("2025-03-10T12:30:00Z"),
     createdAt: new Date("2025-02-05T16:00:00Z"),
     url: "https://storage.example.com/files/f2",
-    parent: "root" // Inside "Photos" folder
+    parent: "0" // Inside "Photos" folder
   },
   {
     id: "f3",
@@ -98,7 +98,7 @@ export const files: FileItem[] = [
     modifiedAt: new Date("2025-03-11T11:00:00Z"),
     createdAt: new Date("2025-03-01T13:00:00Z"),
     url: "https://storage.example.com/files/f4",
-    parent: "root" // Inside "Home" folder
+    parent: "0" // Inside "Home" folder
   },
   {
     id: "f5",
