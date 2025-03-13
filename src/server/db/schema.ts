@@ -1,3 +1,5 @@
+import 'server-only';
+
 import { bigint, int, text, mysqlTable, index } from "drizzle-orm/mysql-core";
 const PREFIX='google_drive_clone_'
 
@@ -7,7 +9,7 @@ export const filesTable = mysqlTable(`${PREFIX}files_table`, {
   size: int('size').notNull(),
   url: text('url').notNull(),
   parent: bigint('parent',{mode:'number',unsigned:true}).notNull(),
-  fileType: text('fileType'),
+  fileType: text('fileType').notNull(),
 }, (t) => ({
   parentIndex: index('parent_index').on(t.parent),
 }));

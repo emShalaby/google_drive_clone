@@ -27,24 +27,22 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { formatBytes, formatDate } from "~/lib/utils";
-import { mockFolders, mockFiles } from "~/lib/mock-data";
+import type { filesTable, foldersTable } from "~/server/db/schema";
 interface FileListProps {
-  itemIds: string[];
+  folderItems: (typeof foldersTable.$inferSelect)[];
+  fileItems: (typeof filesTable.$inferSelect)[];
   currentPath: string[];
   onNavigate: (path: string[]) => void;
   view: "grid" | "list";
 }
 
 export function FileList({
-  itemIds,
+  folderItems,
+  fileItems,
   currentPath,
   onNavigate,
   view,
 }: FileListProps) {
-  //we construct the file/folder based on the item id for now we use mock data
-  const items = [...mockFolders, ...mockFiles].filter((item) =>
-    itemIds.includes(item.id),
-  );
   const getFileIcon = (fileType: string) => {
     switch (fileType) {
       case "image":
@@ -70,56 +68,73 @@ export function FileList({
   if (view === "grid") {
     return (
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-        {items.map((item, index) => (
+        {folderItems.map((folder, index) => (
           <Card key={index} className="overflow-hidden">
-            {item.type === "folder" ? (
-              <div
-                className="flex h-32 cursor-pointer flex-col items-center justify-center bg-muted/50 p-4"
-                onClick={() => handleFolderClick(item.name)}
-              >
-                <FolderIcon className="h-12 w-12 text-yellow-500" />
-              </div>
-            ) : (
-              <div className="flex h-32 flex-col items-center justify-center bg-muted/50 p-4">
-                {getFileIcon(item.fileType)}
-                {item.fileType === "image" && (
-                  <div className="mt-2 h-16 w-16 overflow-hidden rounded">
-                    <img
-                      src={`/placeholder.svg?height=64&width=64`}
-                      alt={item.name}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                )}
-              </div>
-            )}
+            <div
+              className="flex h-32 cursor-pointer flex-col items-center justify-center bg-muted/50 p-4"
+              onClick={() => handleFolderClick(folder.name)}
+            >
+              <FolderIcon className="h-12 w-12 text-yellow-500" />
+            </div>
+
             <CardContent className="p-3">
               <div className="truncate font-medium">
-                {item.type === "folder" ? (
-                  <span
-                    className="cursor-pointer hover:underline"
-                    onClick={() => handleFolderClick(item.name)}
-                  >
-                    {item.name}
-                  </span>
-                ) : (
-                  <a
-                    href={item.type === "file" ? item.url : "#"}
-                    className="hover:underline"
-                    target="_blank"
-                  >
-                    {item.name}
-                  </a>
-                )}
+                <span
+                  className="cursor-pointer hover:underline"
+                  onClick={() => handleFolderClick(folder.name)}
+                >
+                  {folder.name}
+                </span>
+              </div>
+              <div className="text-xs text-muted-foreground"></div>
+            </CardContent>
+            <CardFooter className="flex items-center justify-between p-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <MoreVertical className="h-4 w-4" />
+                    <span className="sr-only">Open menu</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem>Download</DropdownMenuItem>
+                  <DropdownMenuItem>Share</DropdownMenuItem>
+                  <DropdownMenuItem>Rename</DropdownMenuItem>
+                  <DropdownMenuItem className="text-destructive">
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </CardFooter>
+          </Card>
+        ))}
+        {fileItems.map((item, index) => (
+          <Card key={index} className="overflow-hidden">
+            <div className="flex h-32 flex-col items-center justify-center bg-muted/50 p-4">
+              {getFileIcon(item.fileType)}
+              {item.fileType === "image" && (
+                <div className="mt-2 h-16 w-16 overflow-hidden rounded">
+                  <img
+                    src={`/placeholder.svg?height=64&width=64`}
+                    alt={item.name}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              )}
+            </div>
+
+            <CardContent className="p-3">
+              <div className="truncate font-medium">
+                <a href={item.url} className="hover:underline" target="_blank">
+                  {item.name}
+                </a>
               </div>
               <div className="text-xs text-muted-foreground">
-                {item.type === "file" && formatBytes(item.size)}
+                {formatBytes(item.size)}
               </div>
             </CardContent>
             <CardFooter className="flex items-center justify-between p-2">
-              <span className="text-xs text-muted-foreground">
-                {formatDate(item.modifiedAt)}
-              </span>
+              <span className="text-xs text-muted-foreground"></span>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -155,37 +170,60 @@ export function FileList({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {items.map((item, index) => (
+          {folderItems.map((folder, index) => (
             <TableRow key={index}>
               <TableCell>
                 <div className="flex items-center gap-2">
-                  {item.type === "folder" ? (
-                    <>
-                      <FolderIcon className="h-5 w-5 text-yellow-500" />
-                      <span
-                        className="cursor-pointer font-medium hover:underline"
-                        onClick={() => handleFolderClick(item.name)}
-                      >
-                        {item.name}
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      {getFileIcon(item.fileType)}
-                      <Link
-                        href={item.url}
-                        className="font-medium hover:underline"
-                      >
-                        {item.name}
-                      </Link>
-                    </>
-                  )}
+                  <>
+                    <FolderIcon className="h-5 w-5 text-yellow-500" />
+                    <span
+                      className="cursor-pointer font-medium hover:underline"
+                      onClick={() => handleFolderClick(folder.name)}
+                    >
+                      {folder.name}
+                    </span>
+                  </>
                 </div>
               </TableCell>
-              <TableCell>{formatDate(item.modifiedAt)}</TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
               <TableCell>
-                {item.type === "file" ? formatBytes(item.size) : "—"}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <MoreVertical className="h-4 w-4" />
+                      <span className="sr-only">Open menu</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem>Download</DropdownMenuItem>
+                    <DropdownMenuItem>Share</DropdownMenuItem>
+                    <DropdownMenuItem>Rename</DropdownMenuItem>
+                    <DropdownMenuItem className="text-destructive">
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </TableCell>
+            </TableRow>
+          ))}
+          {fileItems.map((file, index) => (
+            <TableRow key={index}>
+              <TableCell>
+                <div className="flex items-center gap-2">
+                  <>
+                    {getFileIcon(file.fileType)}
+                    <Link
+                      href={file.url}
+                      className="font-medium hover:underline"
+                    >
+                      {file.name}
+                    </Link>
+                  </>
+                </div>
+              </TableCell>
+              <TableCell></TableCell>
+              <TableCell>{formatBytes(file.size)}</TableCell>
               <TableCell>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
