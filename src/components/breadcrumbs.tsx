@@ -5,28 +5,28 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
+import { foldersTable } from "~/server/db/schema";
 interface BreadcrumbsProps {
-  breadcrumbItems: { path: string[]; name: string }[];
-  onClick: (path: string[]) => void;
+  parents: (typeof foldersTable.$inferSelect)[];
 }
-const Breadcrumbs = ({ breadcrumbItems, onClick }: BreadcrumbsProps) => {
+const Breadcrumbs = ({ parents }: BreadcrumbsProps) => {
   return (
     <Breadcrumb>
       <BreadcrumbList>
-        {breadcrumbItems.map((item, index) => (
-          <BreadcrumbItem key={index}>
-            {index < breadcrumbItems.length - 1 ? (
+        {parents.map((folder, index) => (
+          <BreadcrumbItem key={folder.id}>
+            {index < parents.length - 1 ? (
               <>
                 <BreadcrumbLink
-                  onClick={() => onClick(item.path)}
+                  href={`/f/${folder.id}`}
                   className="cursor-pointer"
                 >
-                  {item.name}
+                  {folder.name}
                 </BreadcrumbLink>
                 <BreadcrumbSeparator />
               </>
             ) : (
-              <BreadcrumbLink>{item.name}</BreadcrumbLink>
+              <BreadcrumbLink>{folder.name}</BreadcrumbLink>
             )}
           </BreadcrumbItem>
         ))}

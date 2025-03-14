@@ -7,73 +7,27 @@ import Breadcrumbs from "~/components/breadcrumbs";
 import Header from "~/components/header";
 import type { filesTable, foldersTable } from "~/server/db/schema";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function DriveContents({
   folders,
   files,
+  parents,
 }: {
   folders: (typeof foldersTable.$inferSelect)[];
   files: (typeof filesTable.$inferSelect)[];
+  parents: (typeof foldersTable.$inferSelect)[];
 }) {
-  const [currentPath, setCurrentPath] = useState<string[]>([]);
   const [currentView, setCurrentView] = useState<"grid" | "list">("grid");
 
-  const navigateToFolder = (folderPath: string[]) => {
-    setCurrentPath(folderPath);
-  };
-
-  const navigateUp = () => {
-    if (currentPath.length > 0) {
-      setCurrentPath(currentPath.slice(0, -1));
-    }
-  };
-
-  const getCurrentFolder = () => {
-    let current = folders.find((f) => f.id === 1);
-    if (currentPath.length === 0) return current;
-    current = folders.find(
-      (f) =>
-        f.name === currentPath[currentPath.length - 1] &&
-        f.parent === current?.id,
-    );
-    return current;
-  };
-
-  const currentFolder = getCurrentFolder();
-  const breadcrumbItems: { path: string[]; name: string }[] = (() => {
-    const items: { path: string[]; name: string }[] = [
-      { name: "My Drive", path: [] },
-    ];
-    if (currentPath.length === 0) {
-      return items;
-    } else {
-      for (let i = 0; i < currentPath.length; i++) {
-        const name = currentPath[i];
-        if (name) {
-          items.push({
-            name,
-            path: currentPath.slice(0, i + 1),
-          });
-        }
-      }
-      return items;
-    }
-  })();
   return (
     <div className="flex min-h-screen flex-col">
-      <Header currentPath={currentPath} />
+      <Header />
       <main className="flex-1 p-4 md:p-6">
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <Breadcrumbs
-            breadcrumbItems={breadcrumbItems}
-            onClick={navigateToFolder}
-          />
+          <Breadcrumbs parents={parents} />
           <div className="flex items-center gap-2">
-            {currentPath.length > 0 && (
-              <Button variant="outline" size="sm" onClick={navigateUp}>
-                Back
-              </Button>
-            )}
+            {parents.length > 1 && <Link href={`..`}>Back</Link>}
             <Tabs
               defaultValue="grid"
               value={currentView}
@@ -88,10 +42,12 @@ export default function DriveContents({
         </div>
 
         <FileList
-          folderItems={folders.filter((i) => i.parent === currentFolder?.id)}
-          fileItems={files.filter((i) => i.parent === currentFolder?.id)}
-          currentPath={currentPath}
-          onNavigate={navigateToFolder}
+          folderItems={folders.filter(
+            (i) => i.parent === parents[parents.length - 1]?.id,
+          )}
+          fileItems={files.filter(
+            (i) => i.parent === parents[parents.length - 1]?.id,
+          )}
           view={currentView}
         />
       </main>

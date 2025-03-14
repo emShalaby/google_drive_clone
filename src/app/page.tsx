@@ -1,12 +1,7 @@
-import { db } from "~/server/db";
-import DriveContents from "./drive-contents";
-import { filesTable, foldersTable } from "~/server/db/schema";
+import React from "react";
 
-const DrivePage = async () => {
-  const files = await db.select().from(filesTable);
-  const folders = await db.select().from(foldersTable);
-  console.log(files, folders, "FILES AND FOLDERS");
-  return <DriveContents files={files} folders={folders} />;
+const HomePage = () => {
+  return <div>HOME PAGE IN PROGRESS</div>;
 };
 
-export default DrivePage;
+export default HomePage;

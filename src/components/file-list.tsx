@@ -29,21 +29,14 @@ import {
 import { formatBytes, formatDate } from "~/lib/utils";
 import type { filesTable, foldersTable } from "~/server/db/schema";
 import Empty from "./empty";
+import Image from "next/image";
 interface FileListProps {
   folderItems: (typeof foldersTable.$inferSelect)[];
   fileItems: (typeof filesTable.$inferSelect)[];
-  currentPath: string[];
-  onNavigate: (path: string[]) => void;
   view: "grid" | "list";
 }
 
-export function FileList({
-  folderItems,
-  fileItems,
-  currentPath,
-  onNavigate,
-  view,
-}: FileListProps) {
+export function FileList({ folderItems, fileItems, view }: FileListProps) {
   const getFileIcon = (fileType: string) => {
     switch (fileType) {
       case "image":
@@ -61,32 +54,26 @@ export function FileList({
     }
   };
 
-  // Handle folder click
-  const handleFolderClick = (folderName: string) => {
-    onNavigate([...currentPath, folderName]);
-  };
-
   if (view === "grid") {
     return (
       <>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
           {folderItems.map((folder, index) => (
             <Card key={index} className="overflow-hidden">
-              <div
+              <Link
                 className="flex h-32 cursor-pointer flex-col items-center justify-center bg-muted/50 p-4"
-                onClick={() => handleFolderClick(folder.name)}
+                href={`/f/${folder.id}`}
               >
                 <FolderIcon className="h-12 w-12 text-yellow-500" />
-              </div>
-
+              </Link>
               <CardContent className="p-3">
                 <div className="truncate font-medium">
-                  <span
+                  <Link
                     className="cursor-pointer hover:underline"
-                    onClick={() => handleFolderClick(folder.name)}
+                    href={`/f/${folder.id}`}
                   >
                     {folder.name}
-                  </span>
+                  </Link>
                 </div>
                 <div className="text-xs text-muted-foreground"></div>
               </CardContent>
@@ -114,15 +101,6 @@ export function FileList({
             <Card key={index} className="overflow-hidden">
               <div className="flex h-32 flex-col items-center justify-center bg-muted/50 p-4">
                 {getFileIcon(item.fileType)}
-                {item.fileType === "image" && (
-                  <div className="mt-2 h-16 w-16 overflow-hidden rounded">
-                    <img
-                      src={`/placeholder.svg?height=64&width=64`}
-                      alt={item.name}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                )}
               </div>
 
               <CardContent className="p-3">
@@ -188,12 +166,12 @@ export function FileList({
                     <div className="flex items-center gap-2">
                       <>
                         <FolderIcon className="h-5 w-5 text-yellow-500" />
-                        <span
+                        <Link
                           className="cursor-pointer font-medium hover:underline"
-                          onClick={() => handleFolderClick(folder.name)}
+                          href={`/f/${folder.id}`}
                         >
                           {folder.name}
-                        </span>
+                        </Link>
                       </>
                     </div>
                   </TableCell>
