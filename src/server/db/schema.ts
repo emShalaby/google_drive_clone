@@ -13,7 +13,7 @@ export const filesTable = mysqlTable(`${PREFIX}files_table`, {
 }, (t) => ({
   parentIndex: index('parent_index').on(t.parent),
 }));
-
+export type DB_FileType=(typeof filesTable.$inferSelect)[]
 export const foldersTable = mysqlTable(`${PREFIX}folders_table`, {
   id: bigint('id',{mode:'number',unsigned:true}).primaryKey().autoincrement(),
   name: text('name').notNull(),
@@ -21,3 +21,4 @@ export const foldersTable = mysqlTable(`${PREFIX}folders_table`, {
 }, (t) => ({
   parentIndex: index('parent_index').on(t.parent),
 }));
+export type DB_FolderType=(typeof foldersTable.$inferSelect)[]

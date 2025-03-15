@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "~/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { FileList } from "~/components/file-list";
 import Breadcrumbs from "~/components/breadcrumbs";
@@ -8,6 +7,8 @@ import Header from "~/components/header";
 import type { filesTable, foldersTable } from "~/server/db/schema";
 import { useState } from "react";
 import Link from "next/link";
+import { UploadButton } from "~/components/uploadthing";
+import { useRouter } from "next/navigation";
 
 export default function DriveContents({
   folders,
@@ -19,7 +20,7 @@ export default function DriveContents({
   parents: (typeof foldersTable.$inferSelect)[];
 }) {
   const [currentView, setCurrentView] = useState<"grid" | "list">("grid");
-
+  const navigate = useRouter();
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
@@ -49,6 +50,10 @@ export default function DriveContents({
             (i) => i.parent === parents[parents.length - 1]?.id,
           )}
           view={currentView}
+        />
+        <UploadButton
+          endpoint={"imageUploader"}
+          onClientUploadComplete={() => navigate.refresh()}
         />
       </main>
     </div>
