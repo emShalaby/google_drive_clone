@@ -22,12 +22,12 @@ export const QUERIES={
    return db
    .select()
    .from(foldersTable)
-   .where(eq(filesTable.parent, folderId));
+   .where(eq(foldersTable.parent, folderId));
  },
  getFiles:function(folderId:number){
    return db
    .select()
    .from(filesTable)
-   .where(eq(foldersTable.parent, folderId));
+   .where(eq(filesTable.parent, folderId));
  }
 }
