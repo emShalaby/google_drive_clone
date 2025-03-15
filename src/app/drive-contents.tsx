@@ -14,10 +14,12 @@ export default function DriveContents({
   folders,
   files,
   parents,
+  currentFolderId,
 }: {
   folders: (typeof foldersTable.$inferSelect)[];
   files: (typeof filesTable.$inferSelect)[];
   parents: (typeof foldersTable.$inferSelect)[];
+  currentFolderId: number;
 }) {
   const [currentView, setCurrentView] = useState<"grid" | "list">("grid");
   const navigate = useRouter();
@@ -54,6 +56,9 @@ export default function DriveContents({
         <UploadButton
           endpoint={"imageUploader"}
           onClientUploadComplete={() => navigate.refresh()}
+          input={{
+            folderId: currentFolderId,
+          }}
         />
       </main>
     </div>
