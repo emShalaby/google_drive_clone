@@ -5,7 +5,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
-import { foldersTable } from "~/server/db/schema";
+import { type foldersTable } from "~/server/db/schema";
 interface BreadcrumbsProps {
   parents: (typeof foldersTable.$inferSelect)[];
 }

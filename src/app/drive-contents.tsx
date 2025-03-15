@@ -54,7 +54,7 @@ export default function DriveContents({
           view={currentView}
         />
         <UploadButton
-          endpoint={"imageUploader"}
+          endpoint={"driveUploader"}
           onClientUploadComplete={() => navigate.refresh()}
           input={{
             folderId: currentFolderId,
