@@ -78,9 +78,9 @@ export function FileList({ folderItems, fileItems, view }: FileListProps) {
                     {folder.name}
                   </Link>
                 </div>
-                <div className="text-xs text-muted-foreground"></div>
+                <div className="pt- text-xs text-muted-foreground">Folder</div>
               </CardContent>
-              <CardFooter className="flex items-center justify-between p-2">
+              <CardFooter className="flex items-center justify-end p-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -121,7 +121,6 @@ export function FileList({ folderItems, fileItems, view }: FileListProps) {
                 </div>
               </CardContent>
               <CardFooter className="flex items-center justify-between p-2">
-                <span className="text-xs text-muted-foreground"></span>
                 <DropdownMenu>
                   <span className="text-xs">
                     Uploaded : {dayjs(file.createdAt).fromNow()}
