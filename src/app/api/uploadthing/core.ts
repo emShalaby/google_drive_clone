@@ -33,7 +33,7 @@ export const ourFileRouter = {
       // eslint-disable-next-line @typescript-eslint/only-throw-error
       if (!user.userId) throw new UploadThingError("Unauthorized");
 
-      const folder = await QUERIES.getFolderById(input.folderId);
+      const folder = await QUERIES.getFolderById(input.folderId, user.userId);
 
       // eslint-disable-next-line @typescript-eslint/only-throw-error
       if (!folder) throw new UploadThingError("Folder not found");
@@ -56,9 +56,9 @@ export const ourFileRouter = {
           size: file.size,
           url: file.url,
           parent: metadata.parentId,
-          fileType:file.type,
+          fileType: file.type,
           // this shouldnt matter
-          createdAt:new Date()
+          createdAt: new Date(),
         },
         userId: metadata.userId,
       });

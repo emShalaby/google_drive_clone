@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "~/server/db";
 import { filesTable, foldersTable } from "~/server/db/schema";
 export const QUERIES={
@@ -30,9 +30,13 @@ export const QUERIES={
    .from(filesTable)
    .where(eq(filesTable.parent, folderId)).orderBy(filesTable.id);
  },
- getFolderById: async function (folderId:number){
-  const folder=await db.select().from(foldersTable).where(eq(foldersTable.id,folderId))
+ getFolderById: async function (folderId:number,userId:string){
+  const folder=await db.select().from(foldersTable).where(and(eq(foldersTable.id,folderId),eq(foldersTable.ownerId,userId)))
   return folder[0]
+},
+getFileById: async function (fileId:number,userId:string){
+  const file=await db.select().from(filesTable).where(and(eq(filesTable.id,fileId),eq(filesTable.ownerId,userId)))
+  return file[0]
 }
 }
 
@@ -46,5 +50,6 @@ export const MUTATIONS={
     createdAt:Date;
   },userId:string}){
     return await db.insert(filesTable).values({...input.file,ownerId:input.userId,createdAt:new Date()})
-  }
+  },
+
 }

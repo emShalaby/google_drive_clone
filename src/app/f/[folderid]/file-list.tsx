@@ -31,6 +31,7 @@ import type { filesTable, foldersTable } from "~/server/db/schema";
 import Empty from "~/components/empty";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { deleteFile } from "~/server/actions";
 dayjs.extend(relativeTime);
 interface FileListProps {
   folderItems: (typeof foldersTable.$inferSelect)[];
@@ -99,31 +100,31 @@ export function FileList({ folderItems, fileItems, view }: FileListProps) {
               </CardFooter>
             </Card>
           ))}
-          {fileItems.map((item, index) => (
+          {fileItems.map((file, index) => (
             <Card key={index} className="overflow-hidden">
               <div className="flex h-32 flex-col items-center justify-center bg-muted/50 p-4">
-                {getFileIcon(item.fileType)}
+                {getFileIcon(file.fileType)}
               </div>
 
               <CardContent className="p-3">
                 <div className="truncate font-medium">
                   <a
-                    href={item.url}
+                    href={file.url}
                     className="hover:underline"
                     target="_blank"
                   >
-                    {item.name}
+                    {file.name}
                   </a>
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  {formatBytes(item.size)}
+                  {formatBytes(file.size)}
                 </div>
               </CardContent>
               <CardFooter className="flex items-center justify-between p-2">
                 <span className="text-xs text-muted-foreground"></span>
                 <DropdownMenu>
                   <span className="text-xs">
-                    Uploaded : {dayjs(item.createdAt).fromNow()}
+                    Uploaded : {dayjs(file.createdAt).fromNow()}
                   </span>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -135,7 +136,10 @@ export function FileList({ folderItems, fileItems, view }: FileListProps) {
                     <DropdownMenuItem>Download</DropdownMenuItem>
                     <DropdownMenuItem>Share</DropdownMenuItem>
                     <DropdownMenuItem>Rename</DropdownMenuItem>
-                    <DropdownMenuItem className="text-destructive">
+                    <DropdownMenuItem
+                      className="text-destructive"
+                      onClick={() => deleteFile(file.id)}
+                    >
                       Delete
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -232,7 +236,10 @@ export function FileList({ folderItems, fileItems, view }: FileListProps) {
                         <DropdownMenuItem>Download</DropdownMenuItem>
                         <DropdownMenuItem>Share</DropdownMenuItem>
                         <DropdownMenuItem>Rename</DropdownMenuItem>
-                        <DropdownMenuItem className="text-destructive">
+                        <DropdownMenuItem
+                          className="text-destructive"
+                          onClick={() => deleteFile(file.id)}
+                        >
                           Delete
                         </DropdownMenuItem>
                       </DropdownMenuContent>
