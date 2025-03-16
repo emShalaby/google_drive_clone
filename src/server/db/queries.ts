@@ -22,13 +22,13 @@ export const QUERIES={
    return db
    .select()
    .from(foldersTable)
-   .where(eq(foldersTable.parent, folderId));
+   .where(eq(foldersTable.parent, folderId)).orderBy(foldersTable.id);
  },
  getFiles:function(folderId:number){
    return db
    .select()
    .from(filesTable)
-   .where(eq(filesTable.parent, folderId));
+   .where(eq(filesTable.parent, folderId)).orderBy(filesTable.id);
  },
  getFolderById: async function (folderId:number){
   const folder=await db.select().from(foldersTable).where(eq(foldersTable.id,folderId))
@@ -43,7 +43,8 @@ export const MUTATIONS={
     url:string;
     fileType:string;
     parent:number;
+    createdAt:Date;
   },userId:string}){
-    return await db.insert(filesTable).values({...input.file,ownerId:input.userId})
+    return await db.insert(filesTable).values({...input.file,ownerId:input.userId,createdAt:new Date()})
   }
 }

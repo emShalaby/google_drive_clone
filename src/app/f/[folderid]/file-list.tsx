@@ -29,6 +29,9 @@ import {
 import { formatBytes } from "~/lib/utils";
 import type { filesTable, foldersTable } from "~/server/db/schema";
 import Empty from "~/components/empty";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 interface FileListProps {
   folderItems: (typeof foldersTable.$inferSelect)[];
   fileItems: (typeof filesTable.$inferSelect)[];
@@ -119,6 +122,9 @@ export function FileList({ folderItems, fileItems, view }: FileListProps) {
               <CardFooter className="flex items-center justify-between p-2">
                 <span className="text-xs text-muted-foreground"></span>
                 <DropdownMenu>
+                  <span className="text-xs">
+                    Uploaded : {dayjs(item.createdAt).fromNow()}
+                  </span>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" className="h-8 w-8">
                       <MoreVertical className="h-4 w-4" />
@@ -153,7 +159,7 @@ export function FileList({ folderItems, fileItems, view }: FileListProps) {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[400px]">Name</TableHead>
-                <TableHead>Modified</TableHead>
+                <TableHead>Uploaded</TableHead>
                 <TableHead>Size</TableHead>
                 <TableHead className="w-[50px]"></TableHead>
               </TableRow>
@@ -202,16 +208,17 @@ export function FileList({ folderItems, fileItems, view }: FileListProps) {
                     <div className="flex items-center gap-2">
                       <>
                         {getFileIcon(file.fileType)}
-                        <Link
+                        <a
                           href={file.url}
                           className="font-medium hover:underline"
+                          target="_blank"
                         >
                           {file.name}
-                        </Link>
+                        </a>
                       </>
                     </div>
                   </TableCell>
-                  <TableCell></TableCell>
+                  <TableCell>{dayjs(file.createdAt).fromNow()}</TableCell>
                   <TableCell>{formatBytes(file.size)}</TableCell>
                   <TableCell>
                     <DropdownMenu>

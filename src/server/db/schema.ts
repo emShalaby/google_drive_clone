@@ -10,7 +10,7 @@ export const filesTable = mysqlTable(`${PREFIX}files_table`, {
   url: text('url').notNull(),
   parent: bigint('parent',{mode:'number',unsigned:true}).notNull(),
   fileType: text('fileType').notNull(),
-  createdAt:timestamp('created_at').notNull().default(sql`CURRENT_TIMESTAMP`)
+  createdAt:timestamp('created_at',{mode:'date'}).notNull()
 }, (t) => ({
   parentIndex: index('parent_index').on(t.parent),
   ownerIndex:index('owner_id_index').on(t.ownerId)
@@ -22,7 +22,6 @@ export const foldersTable = mysqlTable(`${PREFIX}folders_table`, {
   ownerId:text('owner_id').notNull(),
   name: text('name').notNull(),
   parent: bigint('parent',{mode:'number',unsigned:true}),
-  createdAt:timestamp('created_at').notNull().default(sql`CURRENT_TIMESTAMP`)
 }, (t) => ({
   parentIndex: index('parent_index').on(t.parent),
   ownerIndex:index('owner_id_index').on(t.ownerId)

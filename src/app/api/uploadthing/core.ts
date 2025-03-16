@@ -56,7 +56,9 @@ export const ourFileRouter = {
           size: file.size,
           url: file.url,
           parent: metadata.parentId,
-          fileType:file.type
+          fileType:file.type,
+          // this shouldnt matter
+          createdAt:new Date()
         },
         userId: metadata.userId,
       });
