@@ -26,9 +26,8 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { formatBytes, formatDate } from "~/lib/utils";
+import { formatBytes } from "~/lib/utils";
 import type { filesTable, foldersTable } from "~/server/db/schema";
-import Image from "next/image";
 import Empty from "~/components/empty";
 interface FileListProps {
   folderItems: (typeof foldersTable.$inferSelect)[];

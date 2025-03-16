@@ -4,10 +4,9 @@
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, Suspense } from "react";
 import { usePostHog } from "posthog-js/react";
-import { useAuth, useUser } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 
 function PostHogPageView() {
-  const user = useAuth();
   const userInfo = useUser();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -20,7 +19,7 @@ function PostHogPageView() {
     } else {
       posthog.reset();
     }
-  }, [posthog, user.userId]);
+  }, [posthog, userInfo]);
 
   // Track pageviews
   useEffect(() => {

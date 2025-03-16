@@ -1,5 +1,4 @@
 import React from "react";
-import { UploadButton } from "./upload-button";
 import { Input } from "./ui/input";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
@@ -10,7 +9,6 @@ const Header = () => {
         <h1 className="text-xl font-semibold">Crash Drive</h1>
         <div className="ml-auto flex items-center gap-2">
           <Input placeholder="Search in Drive" className="w-64 md:w-80" />
-          {/* <UploadButton currentPath={["placeholder"]} /> */}
           <SignedOut>
             <SignInButton />
           </SignedOut>
