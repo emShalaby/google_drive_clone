@@ -1,4 +1,4 @@
-import DriveContents from "~/app/drive-contents";
+import DriveContents from "~/app/f/[folderid]/drive-contents";
 import { QUERIES } from "~/server/db/queries";
 
 const DrivePage = async ({

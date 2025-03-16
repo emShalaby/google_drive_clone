@@ -1,14 +1,15 @@
 "use client";
 
-import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { FileList } from "~/components/file-list";
-import Breadcrumbs from "~/components/breadcrumbs";
-import Header from "~/components/header";
-import type { filesTable, foldersTable } from "~/server/db/schema";
-import { useState } from "react";
 import Link from "next/link";
-import { UploadButton } from "~/components/uploadthing";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import Breadcrumbs from "~/components/breadcrumbs";
+
+import Header from "~/components/header";
+import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { UploadButton } from "~/components/uploadthing";
+import type { filesTable, foldersTable } from "~/server/db/schema";
+import { FileList } from "./file-list";
 
 export default function DriveContents({
   folders,

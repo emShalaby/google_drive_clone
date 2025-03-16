@@ -28,8 +28,8 @@ import {
 } from "~/components/ui/table";
 import { formatBytes, formatDate } from "~/lib/utils";
 import type { filesTable, foldersTable } from "~/server/db/schema";
-import Empty from "./empty";
 import Image from "next/image";
+import Empty from "~/components/empty";
 interface FileListProps {
   folderItems: (typeof foldersTable.$inferSelect)[];
   fileItems: (typeof filesTable.$inferSelect)[];
