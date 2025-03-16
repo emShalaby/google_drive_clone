@@ -63,8 +63,8 @@ export default function HomePage() {
                 Easy Sharing
               </h3>
               <p className="text-slate-300">
-                Share files and folders with anyone, even if they don't have a
-                CrashDrive account.
+                Share files and folders with anyone, even if they don&apos;t
+                have a CrashDrive account.
               </p>
             </div>
             <div className="rounded-xl bg-white/10 p-8 backdrop-blur-sm">
