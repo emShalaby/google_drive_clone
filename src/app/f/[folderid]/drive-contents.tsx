@@ -25,7 +25,7 @@ export default function DriveContents({
   const [currentView, setCurrentView] = useState<"grid" | "list">("grid");
   const navigate = useRouter();
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-gray-800">
       <Header />
       <main className="flex-1 p-4 md:p-6">
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
