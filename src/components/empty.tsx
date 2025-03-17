@@ -1,11 +1,6 @@
-"use client";
-
 import { Upload } from "lucide-react";
-import { useRouter } from "next/navigation";
 
-export default function Empty({ folderId }: { folderId?: number }) {
-  const router = useRouter();
-
+export default function Empty() {
   return (
     <div className="flex min-h-[300px] flex-col items-center justify-center rounded-lg border border-dashed border-gray-700 bg-gray-800/50 px-4 py-16 text-center">
       <div className="mb-6 rounded-full bg-gray-700/50 p-4">

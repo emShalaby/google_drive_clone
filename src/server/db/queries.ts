@@ -82,5 +82,6 @@ export const MUTATIONS = {
       parent:null,
     }).$returningId()
     return rootFolder[0]!.id
-  }
+  },
+
 };

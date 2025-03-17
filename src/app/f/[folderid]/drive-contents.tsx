@@ -10,6 +10,9 @@ import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { UploadButton } from "~/components/uploadthing";
 import type { filesTable, foldersTable } from "~/server/db/schema";
 import { FileList } from "./file-list";
+import { FolderPlus } from "lucide-react";
+import { AddFolderButton } from "~/components/ui/add-folder-button";
+import { AddFolderDialog } from "~/components/ui/add-folder-dialog";
 
 export default function DriveContents({
   folders,
@@ -23,7 +26,9 @@ export default function DriveContents({
   currentFolderId: number;
 }) {
   const [currentView, setCurrentView] = useState<"grid" | "list">("grid");
+  const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
   const navigate = useRouter();
+
   return (
     <div className="flex min-h-screen flex-col bg-gray-800">
       <Header />
@@ -31,7 +36,17 @@ export default function DriveContents({
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <Breadcrumbs parents={parents} />
           <div className="flex items-center gap-2">
-            {parents.length > 1 && <Link href={`..`}>Back</Link>}
+            {parents.length > 1 && (
+              <Link href={`..`} className="text-gray-300 hover:text-white">
+                Back
+              </Link>
+            )}
+
+            <AddFolderButton onClick={() => setIsCreateFolderOpen(true)}>
+              <FolderPlus className="mr-2 h-4 w-4" />
+              New Folder
+            </AddFolderButton>
+
             <Tabs
               defaultValue="grid"
               value={currentView}
@@ -54,12 +69,23 @@ export default function DriveContents({
           )}
           view={currentView}
         />
-        <UploadButton
-          endpoint={"driveUploader"}
-          onClientUploadComplete={() => navigate.refresh()}
-          input={{
-            folderId: currentFolderId,
+
+        <div className="mt-6 flex items-center justify-center gap-4">
+          <UploadButton
+            endpoint={"driveUploader"}
+            onClientUploadComplete={() => navigate.refresh()}
+            input={{
+              folderId: currentFolderId,
+            }}
+          />
+        </div>
+
+        <AddFolderDialog
+          isOpen={isCreateFolderOpen}
+          onClose={() => {
+            setIsCreateFolderOpen(false);
           }}
+          parentId={parents[parents.length - 1]!.id}
         />
       </main>
     </div>
