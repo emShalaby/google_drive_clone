@@ -194,133 +194,137 @@ export function FileList({ folderItems, fileItems, view }: FileListProps) {
         <Empty />
       ) : (
         <div className="mb-5 rounded-md border border-gray-700 bg-gray-800">
-          <Table>
-            <TableHeader className="bg-gray-900">
-              <TableRow className="border-gray-700 hover:bg-gray-800">
-                <TableHead className="w-[400px] text-gray-300">Name</TableHead>
-                <TableHead className="text-gray-300">Uploaded</TableHead>
-                <TableHead className="text-gray-300">Size</TableHead>
-                <TableHead className="w-[50px]"></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {folderItems.map((folder, index) => (
-                <TableRow
-                  key={index}
-                  className="border-gray-700 hover:bg-gray-700"
-                >
-                  <TableCell className="text-gray-100">
-                    <div className="flex items-center gap-2">
-                      <>
-                        <FolderIcon className="h-5 w-5 text-yellow-500" />
-                        <Link
-                          className="cursor-pointer font-medium hover:underline"
-                          href={`/f/${folder.id}`}
-                        >
-                          {folder.name}
-                        </Link>
-                      </>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-gray-400"></TableCell>
-                  <TableCell className="text-gray-400"></TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-gray-300 hover:bg-gray-700 hover:text-white"
-                        >
-                          <MoreVertical className="h-4 w-4" />
-                          <span className="sr-only">Open menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="end"
-                        className="border-gray-700 bg-gray-800 text-gray-100"
-                      >
-                        <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
-                          Download
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
-                          Share
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
-                          Rename
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-400 hover:bg-gray-700 focus:bg-gray-700">
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader className="bg-gray-900">
+                <TableRow className="border-gray-700 hover:bg-gray-800">
+                  <TableHead className="w-[400px] text-gray-300">
+                    Name
+                  </TableHead>
+                  <TableHead className="text-gray-300">Uploaded</TableHead>
+                  <TableHead className="text-gray-300">Size</TableHead>
+                  <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
-              ))}
-              {fileItems.map((file, index) => (
-                <TableRow
-                  key={index}
-                  className="border-gray-700 hover:bg-gray-700"
-                >
-                  <TableCell className="text-gray-100">
-                    <div className="flex items-center gap-2">
-                      <>
-                        {getFileIcon(file.fileType)}
-                        <a
-                          href={file.url}
-                          className="font-medium hover:underline"
-                          target="_blank"
-                          rel="noreferrer"
+              </TableHeader>
+              <TableBody>
+                {folderItems.map((folder, index) => (
+                  <TableRow
+                    key={index}
+                    className="border-gray-700 hover:bg-gray-700"
+                  >
+                    <TableCell className="text-gray-100">
+                      <div className="flex items-center gap-2">
+                        <>
+                          <FolderIcon className="h-5 w-5 text-yellow-500" />
+                          <Link
+                            className="cursor-pointer font-medium hover:underline"
+                            href={`/f/${folder.id}`}
+                          >
+                            {folder.name}
+                          </Link>
+                        </>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-gray-400"></TableCell>
+                    <TableCell className="text-gray-400"></TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-gray-300 hover:bg-gray-700 hover:text-white"
+                          >
+                            <MoreVertical className="h-4 w-4" />
+                            <span className="sr-only">Open menu</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          align="end"
+                          className="border-gray-700 bg-gray-800 text-gray-100"
                         >
-                          {file.name}
-                        </a>
-                      </>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-gray-400">
-                    {dayjs(file.createdAt).fromNow()}
-                  </TableCell>
-                  <TableCell className="text-gray-400">
-                    {formatBytes(file.size)}
-                  </TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-gray-300 hover:bg-gray-700 hover:text-white"
+                          <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
+                            Download
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
+                            Share
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
+                            Rename
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className="text-red-400 hover:bg-gray-700 focus:bg-gray-700">
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {fileItems.map((file, index) => (
+                  <TableRow
+                    key={index}
+                    className="border-gray-700 hover:bg-gray-700"
+                  >
+                    <TableCell className="text-gray-100">
+                      <div className="flex items-center gap-2">
+                        <>
+                          {getFileIcon(file.fileType)}
+                          <a
+                            href={file.url}
+                            className="font-medium hover:underline"
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            {file.name}
+                          </a>
+                        </>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-gray-400">
+                      {dayjs(file.createdAt).fromNow()}
+                    </TableCell>
+                    <TableCell className="text-gray-400">
+                      {formatBytes(file.size)}
+                    </TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-gray-300 hover:bg-gray-700 hover:text-white"
+                          >
+                            <MoreVertical className="h-4 w-4" />
+                            <span className="sr-only">Open menu</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          align="end"
+                          className="border-gray-700 bg-gray-800 text-gray-100"
                         >
-                          <MoreVertical className="h-4 w-4" />
-                          <span className="sr-only">Open menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="end"
-                        className="border-gray-700 bg-gray-800 text-gray-100"
-                      >
-                        <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
-                          Download
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
-                          Share
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
-                          Rename
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          className="text-red-400 hover:bg-gray-700 focus:bg-gray-700"
-                          onClick={() => deleteFile(file.id)}
-                        >
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                          <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
+                            Download
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
+                            Share
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
+                            Rename
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="text-red-400 hover:bg-gray-700 focus:bg-gray-700"
+                            onClick={() => deleteFile(file.id)}
+                          >
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       )}
     </>

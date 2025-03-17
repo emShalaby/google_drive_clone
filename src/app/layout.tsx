@@ -15,7 +15,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <ClerkProvider>
-      <html lang="en" className={`${GeistSans.variable}`}>
+      <html lang="en" className={`${GeistSans.variable} min-h-screen`}>
         <body>
           <PostHogProvider>{children}</PostHogProvider>
         </body>
