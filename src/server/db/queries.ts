@@ -49,13 +49,13 @@ export const QUERIES = {
     return file[0];
   },
   getRootFolder: async function (userId: string) {
-    const file = await db
+    const folder = await db
       .select()
       .from(foldersTable)
       .where(
         and(eq(foldersTable.ownerId, userId), isNull(foldersTable.parent)),
       );
-    return file[0];
+    return folder[0];
   },
 };
 

@@ -1,4 +1,3 @@
-import { sql } from "drizzle-orm";
 import { bigint, int, text, mysqlTable, index, timestamp} from "drizzle-orm/mysql-core";
 const PREFIX='google_drive_clone_'
 

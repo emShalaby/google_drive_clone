@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { ArrowRight, Cloud, Share2, Smartphone } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { auth } from "@clerk/nextjs/server";
