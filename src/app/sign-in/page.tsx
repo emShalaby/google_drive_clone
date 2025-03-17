@@ -8,10 +8,12 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
 import { SignInButton } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
-export default function SignInPage() {
+export default async function SignInPage() {
+  const session = await auth();
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4">
       <div className="w-full max-w-md">
@@ -25,10 +27,24 @@ export default function SignInPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="flex justify-center pt-4">
-            <div className="flex w-full transform items-center justify-center bg-white p-1 text-purple-900 transition-all duration-200 hover:scale-[1.02] hover:bg-slate-100">
-              <SignInButton></SignInButton>
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </div>
+            {session.userId ? (
+              <Link
+                href={"/drive"}
+                className={`flex w-full transform cursor-pointer items-center justify-center bg-white p-1 text-purple-900 transition-all duration-200 hover:scale-[1.02] hover:bg-slate-100`}
+              >
+                <p>Already signed in back to application</p>
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            ) : (
+              <div
+                className={`flex w-full transform cursor-pointer items-center justify-center bg-white p-1 text-purple-900 transition-all duration-200 hover:scale-[1.02] hover:bg-slate-100`}
+              >
+                <>
+                  <SignInButton></SignInButton>
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </>
+              </div>
+            )}
           </CardContent>
           <CardFooter className="flex flex-col space-y-4 text-center text-sm text-slate-400"></CardFooter>
         </Card>
