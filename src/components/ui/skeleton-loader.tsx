@@ -9,7 +9,7 @@ export function SkeletonLoader({ className = "" }: { className?: string }) {
       <div className="mb-8 mt-6 h-[1px] w-full bg-gray-800" />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-        {[...Array(6)].map((_, i) => (
+        {Array.from({ length: 6 }, (_, i) => (
           <div
             key={i}
             className="rounded-lg border border-gray-700 bg-gray-800 p-4"

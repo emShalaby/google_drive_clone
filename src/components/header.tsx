@@ -1,6 +1,4 @@
-import { Input } from "./ui/input";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
-import { Search } from "lucide-react";
 
 const Header = () => {
   return (

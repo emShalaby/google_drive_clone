@@ -6,7 +6,7 @@ export function FileListSkeleton({
   if (view === "grid") {
     return (
       <div className="mb-5 grid w-full animate-pulse grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-        {[...Array(12)].map((_, i) => (
+        {Array.from({ length: 12 }, (_, i) => (
           <div
             key={i}
             className="overflow-hidden rounded-md border border-gray-700 bg-gray-800"
@@ -40,7 +40,7 @@ export function FileListSkeleton({
             </div>
           </div>
           <div className="divide-y divide-gray-700">
-            {[...Array(8)].map((_, i) => (
+            {Array(8).map((item: null, i) => (
               <div key={i} className="p-4">
                 <div className="grid grid-cols-4 gap-4">
                   <div className="flex items-center gap-2">
