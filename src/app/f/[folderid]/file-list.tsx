@@ -116,12 +116,6 @@ export function FileList({ folderItems, fileItems, view }: FileListProps) {
                       align="end"
                       className="border-gray-700 bg-gray-800 text-gray-100"
                     >
-                      <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
-                        Download
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
-                        Share
-                      </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => {
                           renameOnClick(folder.id, "folder");
@@ -187,12 +181,6 @@ export function FileList({ folderItems, fileItems, view }: FileListProps) {
                       align="end"
                       className="border-gray-700 bg-gray-800 text-gray-100"
                     >
-                      <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
-                        Download
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
-                        Share
-                      </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => {
                           renameOnClick(file.id, "file");
