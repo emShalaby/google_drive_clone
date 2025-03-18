@@ -33,6 +33,8 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { deleteFile, deleteFolder } from "~/server/actions";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { RenameDialog } from "~/components/rename-dialog";
 dayjs.extend(relativeTime);
 interface FileListProps {
   folderItems: (typeof foldersTable.$inferSelect)[];
@@ -42,6 +44,16 @@ interface FileListProps {
 
 export function FileList({ folderItems, fileItems, view }: FileListProps) {
   const navigate = useRouter();
+  const [renameDialogIsOpen, setRenameDialogIsOpen] = useState<boolean>(false);
+  const [currentItemType, setCurrentitemType] = useState<"file" | "folder">(
+    "folder",
+  );
+  const [currentId, setCurrentId] = useState<number>(0);
+  const renameOnClick = (id: number, type: "file" | "folder") => {
+    setCurrentId(id);
+    setCurrentitemType(type);
+    setRenameDialogIsOpen(true);
+  };
   const getFileIcon = (fileType: string) => {
     switch (fileType) {
       case "image":
@@ -110,7 +122,12 @@ export function FileList({ folderItems, fileItems, view }: FileListProps) {
                       <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
                         Share
                       </DropdownMenuItem>
-                      <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
+                      <DropdownMenuItem
+                        onClick={() => {
+                          renameOnClick(folder.id, "folder");
+                        }}
+                        className="hover:bg-gray-700 focus:bg-gray-700"
+                      >
                         Rename
                       </DropdownMenuItem>
                       <DropdownMenuItem
@@ -176,7 +193,12 @@ export function FileList({ folderItems, fileItems, view }: FileListProps) {
                       <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
                         Share
                       </DropdownMenuItem>
-                      <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
+                      <DropdownMenuItem
+                        onClick={() => {
+                          renameOnClick(file.id, "file");
+                        }}
+                        className="hover:bg-gray-700 focus:bg-gray-700"
+                      >
                         Rename
                       </DropdownMenuItem>
                       <DropdownMenuItem
@@ -192,6 +214,12 @@ export function FileList({ folderItems, fileItems, view }: FileListProps) {
             ))}
           </div>
         )}
+        <RenameDialog
+          isOpen={renameDialogIsOpen}
+          onClose={() => setRenameDialogIsOpen(false)}
+          id={currentId}
+          type={currentItemType}
+        />
       </>
     );
   }
@@ -257,7 +285,12 @@ export function FileList({ folderItems, fileItems, view }: FileListProps) {
                           <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
                             Share
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
+                          <DropdownMenuItem
+                            onClick={() => {
+                              renameOnClick(folder.id, "folder");
+                            }}
+                            className="hover:bg-gray-700 focus:bg-gray-700"
+                          >
                             Rename
                           </DropdownMenuItem>
                           <DropdownMenuItem
@@ -319,7 +352,12 @@ export function FileList({ folderItems, fileItems, view }: FileListProps) {
                           <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
                             Share
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
+                          <DropdownMenuItem
+                            onClick={() => {
+                              renameOnClick(file.id, "file");
+                            }}
+                            className="hover:bg-gray-700 focus:bg-gray-700"
+                          >
                             Rename
                           </DropdownMenuItem>
                           <DropdownMenuItem

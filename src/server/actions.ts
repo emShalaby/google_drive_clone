@@ -125,3 +125,14 @@ export async function deleteFolder(folderId: number) {
     return { error: "Failed to delete folder due to an internal error" };
   }
 }
+export async function rename(id:number,type:'file' | 'folder',newName:string){
+  const session =await auth()
+  if(!session.userId) return {error:'Unauthorized'}
+  try{
+    if(type==='file')  await db.update(filesTable).set({name:newName}).where(and(eq(filesTable.id,id),eq(filesTable.ownerId,session.userId)))
+      else if(type==='folder') await db.update(foldersTable).set({name:newName}).where(and(eq(foldersTable.id,id),eq(foldersTable.ownerId,session.userId)))
+    return {success:true}
+  }catch{
+    return {error:'Rename failed'}
+  }
+}
