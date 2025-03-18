@@ -57,6 +57,32 @@ export const QUERIES = {
       );
     return folder[0];
   },
+  getAllFolderChildren: async function (
+    folderId: number,
+    userId: string,
+  ) {
+    const childrenFolders = await db
+      .select()
+      .from(foldersTable)
+      .where(
+        and(
+          eq(foldersTable.parent, folderId),
+          eq(foldersTable.ownerId, userId),
+        ),
+      );
+  
+    const childrenFiles = await db
+      .select()
+      .from(filesTable)
+      .where(
+        and(
+          eq(filesTable.parent, folderId),
+          eq(filesTable.ownerId, userId),
+        ),
+      );
+  
+    return {  childrenFolders,  childrenFiles };
+  }
 };
 
 export const MUTATIONS = {

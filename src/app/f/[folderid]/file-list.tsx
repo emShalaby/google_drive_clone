@@ -31,7 +31,8 @@ import type { filesTable, foldersTable } from "~/server/db/schema";
 import Empty from "~/components/empty";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { deleteFile } from "~/server/actions";
+import { deleteFile, deleteFolder } from "~/server/actions";
+import { useRouter } from "next/navigation";
 dayjs.extend(relativeTime);
 interface FileListProps {
   folderItems: (typeof foldersTable.$inferSelect)[];
@@ -40,6 +41,7 @@ interface FileListProps {
 }
 
 export function FileList({ folderItems, fileItems, view }: FileListProps) {
+  const navigate = useRouter();
   const getFileIcon = (fileType: string) => {
     switch (fileType) {
       case "image":
@@ -111,7 +113,13 @@ export function FileList({ folderItems, fileItems, view }: FileListProps) {
                       <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
                         Rename
                       </DropdownMenuItem>
-                      <DropdownMenuItem className="text-red-400 hover:bg-gray-700 focus:bg-gray-700">
+                      <DropdownMenuItem
+                        onClick={async () => {
+                          await deleteFolder(folder.id);
+                          navigate.refresh();
+                        }}
+                        className="text-red-400 hover:bg-gray-700 focus:bg-gray-700"
+                      >
                         Delete
                       </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -252,7 +260,10 @@ export function FileList({ folderItems, fileItems, view }: FileListProps) {
                           <DropdownMenuItem className="hover:bg-gray-700 focus:bg-gray-700">
                             Rename
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="text-red-400 hover:bg-gray-700 focus:bg-gray-700">
+                          <DropdownMenuItem
+                            onClick={() => deleteFolder(folder.id)}
+                            className="text-red-400 hover:bg-gray-700 focus:bg-gray-700"
+                          >
                             Delete
                           </DropdownMenuItem>
                         </DropdownMenuContent>

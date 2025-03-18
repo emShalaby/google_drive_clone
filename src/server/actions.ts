@@ -39,6 +39,7 @@ export async function deleteFile(fileId: number) {
     return { error: "Failed to delete file" };
   }
 }
+
 const CreateFolderSchema = z.object({
   parentId: z.string().transform((val) => {
     const num = Number(val);
@@ -47,6 +48,7 @@ const CreateFolderSchema = z.object({
   }),
   name: z.string().min(1, "Folder name is required").trim(),
 });
+
 export async function CreateFolder(formData: FormData) {
   const session = await auth();
   if (!session.userId) {
@@ -82,5 +84,44 @@ export async function CreateFolder(formData: FormData) {
   } catch  {
     console.error("Creation failed:");
     return { error:"Failed to create folder due to a database issue"  };
+  }
+}
+
+export async function deleteFolder(folderId: number) {
+  const session = await auth();
+  if (!session.userId) {
+    return { error: "Unauthorized" };
+  }
+
+  try {
+    const { childrenFolders, childrenFiles } = await QUERIES.getAllFolderChildren(
+      folderId,
+      session.userId,
+    );
+
+    await Promise.all(
+      childrenFiles.map(async (file) => {
+        await deleteFile(file.id); 
+      }),
+    );
+
+    for (const folder of childrenFolders) {
+      await deleteFolder(folder.id); 
+      await db
+        .delete(foldersTable)
+        .where(
+          and(eq(foldersTable.id, folder.id), eq(foldersTable.ownerId, session.userId)),
+        );
+    }
+
+    await db
+      .delete(foldersTable)
+      .where(
+        and(eq(foldersTable.id, folderId), eq(foldersTable.ownerId, session.userId)),
+      );
+    return { success: true };
+  } catch {
+    console.error("Failed to delete folder:");
+    return { error: "Failed to delete folder due to an internal error" };
   }
 }
