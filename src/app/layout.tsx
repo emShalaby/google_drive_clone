@@ -3,7 +3,7 @@ import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
-import { PostHogProvider } from "./_providers/posthog-provider";
+
 export const metadata: Metadata = {
   title: "Crash Drive",
   description: "Google drive clone",
@@ -16,9 +16,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" className={`${GeistSans.variable} min-h-screen`}>
-        <body>
-          <PostHogProvider>{children}</PostHogProvider>
-        </body>
+        <body>{children}</body>
       </html>
     </ClerkProvider>
   );
