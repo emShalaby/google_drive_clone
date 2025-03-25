@@ -28,10 +28,25 @@ export function AddFolderDialog({
   parentId,
 }: AddFolderDialogProps) {
   const [folderName, setFolderName] = useState("");
-  const handleSubmit = async (formData: FormData) => {
-    await CreateFolder(formData);
-    setFolderName("");
-    onClose();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!folderName.trim()) return;
+
+    setIsSubmitting(true);
+    try {
+      const formData = new FormData();
+      formData.append("name", folderName);
+      formData.append("parentId", parentId.toString());
+      await CreateFolder(formData);
+      setFolderName("");
+    } catch (error) {
+      console.error("Error creating folder:", error);
+    } finally {
+      setIsSubmitting(false);
+      onClose();
+    }
   };
 
   return (
@@ -46,7 +61,7 @@ export function AddFolderDialog({
             Enter a name for your new folder.
           </DialogDescription>
         </DialogHeader>
-        <form action={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-right text-gray-300">
@@ -61,7 +76,6 @@ export function AddFolderDialog({
                 className="col-span-3 border-gray-600 bg-gray-700 text-gray-100 focus:border-purple-500 focus:ring-purple-500"
                 autoFocus
               />
-              <input type="hidden" name="parentId" value={parentId} />
             </div>
           </div>
           <DialogFooter>
@@ -71,14 +85,14 @@ export function AddFolderDialog({
               onClick={onClose}
               className="border-gray-600 text-black hover:bg-gray-700 hover:text-white"
             >
-              Cancel
+              Close
             </Button>
             <Button
               type="submit"
-              disabled={!folderName.trim()}
+              disabled={!folderName.trim() || isSubmitting}
               className="bg-purple-600 text-white hover:bg-purple-700"
             >
-              New Folder
+              {isSubmitting ? "Creating..." : "New Folder"}
             </Button>
           </DialogFooter>
         </form>
