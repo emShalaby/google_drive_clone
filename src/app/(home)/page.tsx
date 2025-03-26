@@ -2,7 +2,19 @@ import { ArrowRight, Cloud, Share2, Smartphone } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { MUTATIONS, QUERIES } from "~/server/db/queries";
 
+const getStartedAction = async () => {
+  "use server";
+  const session = await auth();
+  if (!session.userId) redirect("/sign-in");
+  const rootFolder = await QUERIES.getRootFolder(session.userId);
+  if (!rootFolder) {
+    const rootFolderId = await MUTATIONS.createRootFolder(session.userId);
+    redirect(`/f/${rootFolderId}`);
+  }
+  redirect(`/f/${String(rootFolder?.id)}`);
+};
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
@@ -25,14 +37,7 @@ export default function HomePage() {
               Securely access your content anywhere with CrashDrive. Your files
               are always backed up and easy to share.
             </p>
-            <form
-              action={async () => {
-                "use server";
-                const session = await auth();
-                if (!session.userId) redirect("/sign-in");
-                redirect("/drive");
-              }}
-            >
+            <form action={getStartedAction}>
               <Button className="rounded-full bg-white px-8 py-6 text-lg text-purple-900 transition-colors hover:bg-slate-100">
                 Get Started <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
@@ -161,14 +166,7 @@ export default function HomePage() {
             <p className="mb-8 text-xl text-slate-300">
               Join others who trust CrashDrive with their important files.
             </p>
-            <form
-              action={async () => {
-                "use server";
-                const session = await auth();
-                if (!session.userId) redirect("/sign-in");
-                redirect("/drive");
-              }}
-            >
+            <form action={getStartedAction}>
               <Button className="rounded-full bg-white px-8 py-6 text-lg text-purple-900 transition-colors hover:bg-slate-100">
                 Get Started <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
